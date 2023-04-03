@@ -3,8 +3,12 @@ import PySimpleGUI as sg
 # sg.Window(title="Text to Speech App", layout=[[]], margins=(100, 50)).read()
 
 layout = [
-        [ 
+        [    
             sg.Input(key='Text'),sg.Button("Speak")
+        ],
+        [
+            sg.Text('Volume:'), sg.Slider(range=(0, 100), orientation='h', size=(20, 15), default_value=50, key='-VOLUME-'),
+            sg.Text('Speed:'), sg.Slider(range=(50, 300), orientation='h', size=(20, 15), default_value=100, key='-SPEED-'),
         ],
         [
             sg.Text("Select Voice Type"),
@@ -24,6 +28,9 @@ while True:
     event, values = window.read()
     print(event,values)
     if event == "Speak":
+        volume = values['-VOLUME-']
+        speed = values['-SPEED-']
+
         if values['Female'] == True:
             engine.setProperty('voice', voices[1].id)
         engine.say(values['Text'])    
@@ -31,6 +38,15 @@ while True:
     if event == sg.WIN_CLOSED:
         break
 
+
+        engine.setProperty('volume', volume/100)
+        engine.setProperty('rate', speed)
+        engine.say(text)
+        engine.runAndWait()
+
+
+
+        window.close()
 # for voice in voices:
 #    engine.setProperty('voice', voice.id)
 #    engine.say('The quick brown fox jumped over the lazy dog.')
